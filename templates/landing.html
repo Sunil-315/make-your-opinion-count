@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome - Make Your Opinion Count{% endblock %}
+
+{% block content %}
+<div class="hero min-h-[80vh]">
+    <div class="hero-content text-center">
+        <div class="max-w-2xl">
+            <!-- Welcome Text -->
+            <h1
+                class="text-6xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-4">
+                Make Your Opinion Count
+            </h1>
+            <p class="text-2xl text-base-content/80 mb-12">
+                Create Polls and value peoples' opinion
+            </p>
+
+            <!-- Main Action Card -->
+            <div class="card bg-base-100 shadow-2xl">
+                <div class="card-body p-8 space-y-6">
+                    <!-- New Poll Button -->
+                    <button class="btn btn-primary btn-lg w-full text-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        New Poll
+                    </button>
+
+                    <!-- Divider -->
+                    <div class="divider"></div>
+
+                    <!-- Enter Poll Code Input -->
+                    <div class="form-control">
+                        <div class="join w-full">
+                            <input type="text" placeholder="Enter poll code..."
+                                class="input input-bordered input-lg join-item w-full" />
+                            <button class="btn btn-secondary btn-lg join-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                                Join
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="divider"></div>
+
+                    <!-- My Polls Button -->
+                    <button class="btn btn-outline btn-lg w-full text-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        My Polls
+                    </button>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                <div class="text-center">
+                    <div class="text-4xl mb-2">📊</div>
+                    <h3 class="font-bold text-lg mb-2">Create Polls</h3>
+                    <p class="text-sm text-base-content/70">Easy poll creation with multiple options</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl mb-2">🔗</div>
+                    <h3 class="font-bold text-lg mb-2">Share Easily</h3>
+                    <p class="text-sm text-base-content/70">Share via unique poll codes</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl mb-2">📈</div>
+                    <h3 class="font-bold text-lg mb-2">View Results</h3>
+                    <p class="text-sm text-base-content/70">Real-time poll statistics</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Custom gradient animation */
+    @keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .bg-gradient-to-r {
+        background-size: 200% 200%;
+        animation: gradient 5s ease infinite;
+    }
+</style>
+{% endblock %}
