@@ -7,9 +7,12 @@
     <!-- Poll Header -->
     <div class="text-center mb-8">
         <h1 class="text-4xl font-bold mb-4">{{ poll.question }}</h1>
-        <div class="flex justify-center gap-4 text-sm">
+        <div class="flex justify-center gap-4 text-sm flex-wrap">
             <div class="badge badge-primary badge-lg">Poll Code: {{ poll.poll_code }}</div>
             <div class="badge badge-secondary badge-lg">{{ total_votes }} Vote{{ total_votes|pluralize }}</div>
+            {% if poll.created_by %}
+            <div class="badge badge-accent badge-lg">By: {{ poll.created_by.username }}</div>
+            {% endif %}
         </div>
     </div>
 
@@ -34,6 +37,41 @@
         <div class="card bg-base-100 shadow-xl">
             <div class="card-body">
                 <h2 class="card-title mb-4">Cast Your Vote</h2>
+
+                {% if not user.is_authenticated %}
+                <!-- Not logged in -->
+                <div class="alert alert-warning">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <div>
+                        <h3 class="font-bold">Login Required</h3>
+                        <div class="text-sm">You must be logged in to vote.</div>
+                    </div>
+                </div>
+                <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="btn btn-primary w-full mt-4">
+                    Login to Vote
+                </a>
+
+                {% elif has_voted %}
+                <!-- Already voted -->
+                <div class="alert alert-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                        <h3 class="font-bold">Vote Recorded!</h3>
+                        <div class="text-sm">You voted for: <strong>{{ user_vote.choice.text }}</strong></div>
+                    </div>
+                </div>
+                <p class="mt-4 text-base-content/70 text-center">Thank you for participating!</p>
+
+                {% else %}
+                <!-- Can vote -->
                 <form method="POST" action="{% url 'polls:vote' poll.poll_code %}">
                     {% csrf_token %}
                     <div class="space-y-3">
@@ -53,6 +91,7 @@
                         Submit Vote
                     </button>
                 </form>
+                {% endif %}
             </div>
         </div>
 
@@ -62,9 +101,9 @@
                 <h2 class="card-title mb-4">Live Results</h2>
                 <div class="space-y-4">
                     {% for choice in choices %}
-                    {% with percentage=choice.vote_count|floatformat:0 %}
+                    {% with vote_count=choice.get_vote_count %}
                     {% if total_votes > 0 %}
-                    {% widthratio choice.vote_count total_votes 100 as calc_percentage %}
+                    {% widthratio vote_count total_votes 100 as calc_percentage %}
                     {% else %}
                     {% widthratio 0 1 100 as calc_percentage %}
                     {% endif %}
@@ -72,8 +111,7 @@
                     <div>
                         <div class="flex justify-between mb-1">
                             <span class="font-semibold">{{ choice.text }}</span>
-                            <span class="text-base-content/70">{{ choice.vote_count }} 
-                                vote{{ choice.vote_count|pluralize }}</span>
+                            <span class="text-base-content/70">{{ vote_count }} vote{{ vote_count|pluralize }}</span>
                         </div>
                         <div class="w-full bg-base-300 rounded-full h-4">
                             <div class="bg-primary h-4 rounded-full transition-all duration-500 flex items-center justify-end pr-2"

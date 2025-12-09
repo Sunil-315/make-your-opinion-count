@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up - Make Your Opinion Count{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+    <!-- Page Header -->
+    <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold mb-2">Create Account</h1>
+        <p class="text-base-content/70">Join us to create and participate in polls</p>
+    </div>
+
+    <!-- Display Messages -->
+    {% if messages %}
+    <div class="mb-6">
+        {% for message in messages %}
+        <div role="alert" class="alert alert-{{ message.tags }} mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Signup Form Card -->
+    <div class="card bg-base-100 shadow-2xl">
+        <div class="card-body">
+            <form method="POST" action="{% url 'accounts:signup' %}">
+                {% csrf_token %}
+
+                <!-- Username Input -->
+                <div class="form-control mb-4">
+                    <label class="label">
+                        <span class="label-text font-semibold">Username</span>
+                    </label>
+                    <input type="text" name="username" placeholder="Choose a username"
+                        class="input input-bordered w-full" required autofocus minlength="3" />
+                    <label class="label">
+                        <span class="label-text-alt">At least 3 characters</span>
+                    </label>
+                </div>
+
+                <!-- Email Input -->
+                <div class="form-control mb-4">
+                    <label class="label">
+                        <span class="label-text font-semibold">Email</span>
+                    </label>
+                    <input type="email" name="email" placeholder="your@email.com" class="input input-bordered w-full"
+                        required />
+                </div>
+
+                <!-- Password Input -->
+                <div class="form-control mb-4">
+                    <label class="label">
+                        <span class="label-text font-semibold">Password</span>
+                    </label>
+                    <input type="password" name="password" placeholder="Create a password"
+                        class="input input-bordered w-full" required minlength="6" />
+                    <label class="label">
+                        <span class="label-text-alt">At least 6 characters</span>
+                    </label>
+                </div>
+
+                <!-- Confirm Password Input -->
+                <div class="form-control mb-6">
+                    <label class="label">
+                        <span class="label-text font-semibold">Confirm Password</span>
+                    </label>
+                    <input type="password" name="confirm_password" placeholder="Confirm your password"
+                        class="input input-bordered w-full" required minlength="6" />
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary w-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    </svg>
+                    Create Account
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="divider">OR</div>
+
+            <!-- Login Link -->
+            <div class="text-center">
+                <p class="text-base-content/70">
+                    Already have an account?
+                    <a href="{% url 'accounts:login' %}" class="link link-primary font-semibold">Login here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Home -->
+    <div class="text-center mt-6">
+        <a href="{% url 'home' %}" class="btn btn-ghost">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Home
+        </a>
+    </div>
+</div>
+{% endblock %}

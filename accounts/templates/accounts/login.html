@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - Make Your Opinion Count{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+    <!-- Page Header -->
+    <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold mb-2">Welcome Back!</h1>
+        <p class="text-base-content/70">Login to create and vote on polls</p>
+    </div>
+
+    <!-- Display Messages -->
+    {% if messages %}
+    <div class="mb-6">
+        {% for message in messages %}
+        <div role="alert" class="alert alert-{{ message.tags }} mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Login Form Card -->
+    <div class="card bg-base-100 shadow-2xl">
+        <div class="card-body">
+            <form method="POST" action="{% url 'accounts:login' %}">
+                {% csrf_token %}
+
+                <!-- Username Input -->
+                <div class="form-control mb-4">
+                    <label class="label">
+                        <span class="label-text font-semibold">Username</span>
+                    </label>
+                    <input type="text" name="username" placeholder="Enter your username"
+                        class="input input-bordered w-full" required autofocus />
+                </div>
+
+                <!-- Password Input -->
+                <div class="form-control mb-6">
+                    <label class="label">
+                        <span class="label-text font-semibold">Password</span>
+                    </label>
+                    <input type="password" name="password" placeholder="Enter your password"
+                        class="input input-bordered w-full" required />
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary w-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                    </svg>
+                    Login
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="divider">OR</div>
+
+            <!-- Signup Link -->
+            <div class="text-center">
+                <p class="text-base-content/70">
+                    Don't have an account?
+                    <a href="{% url 'accounts:signup' %}" class="link link-primary font-semibold">Sign up here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Home -->
+    <div class="text-center mt-6">
+        <a href="{% url 'home' %}" class="btn btn-ghost">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Home
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Poll, Choice
+from .models import Poll, Choice, Vote
 
 
 class ChoiceInline(admin.TabularInline):
@@ -13,9 +13,9 @@ class ChoiceInline(admin.TabularInline):
 
 @admin.register(Poll)
 class PollAdmin(admin.ModelAdmin):
-    list_display = ['question', 'poll_code', 'created_date', 'is_active', 'get_choice_count', 'get_total_votes']
-    list_filter = ['is_active', 'created_date']
-    search_fields = ['question', 'poll_code']
+    list_display = ['question', 'poll_code', 'created_by', 'created_date', 'is_active', 'get_choice_count', 'get_total_votes']
+    list_filter = ['is_active', 'created_date', 'created_by']
+    search_fields = ['question', 'poll_code', 'created_by__username']
     readonly_fields = ['poll_code', 'created_date']
     inlines = [ChoiceInline]
     
@@ -30,7 +30,23 @@ class PollAdmin(admin.ModelAdmin):
 
 @admin.register(Choice)
 class ChoiceAdmin(admin.ModelAdmin):
-    list_display = ['text', 'poll', 'vote_count']
+    list_display = ['text', 'poll', 'get_vote_count']
     list_filter = ['poll']
     search_fields = ['text', 'poll__question']
-    readonly_fields = ['vote_count']
+    
+    def get_vote_count(self, obj):
+        return obj.get_vote_count()
+    get_vote_count.short_description = 'Vote Count'
+
+
+@admin.register(Vote)
+class VoteAdmin(admin.ModelAdmin):
+    list_display = ['user', 'choice', 'get_poll', 'voted_at']
+    list_filter = ['voted_at', 'choice__poll']
+    search_fields = ['user__username', 'choice__text', 'choice__poll__question']
+    readonly_fields = ['user', 'choice', 'voted_at']
+    
+    def get_poll(self, obj):
+        return obj.choice.poll.question
+    get_poll.short_description = 'Poll'
+
