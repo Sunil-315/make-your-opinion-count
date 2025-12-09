@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+
+{% block title %}Create New Poll - Make Your Opinion Count{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <!-- Page Header -->
+    <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold mb-2">Create New Poll</h1>
+        <p class="text-base-content/70">Create a poll with 2-4 options to gather opinions</p>
+    </div>
+
+    <!-- Poll Creation Form -->
+    <div class="card bg-base-100 shadow-2xl">
+        <div class="card-body">
+            <form method="POST" action="{% url 'polls:create_poll' %}" id="pollForm">
+                {% csrf_token %}
+
+                <!-- Question Input -->
+                <div class="form-control mb-6">
+                    <label class="label">
+                        <span class="label-text font-semibold text-lg">Poll Question</span>
+                        <span class="label-text-alt text-error">*Required</span>
+                    </label>
+                    <input type="text" name="question" placeholder="What's your question?"
+                        class="input input-bordered input-lg w-full" required maxlength="200" />
+                    <label class="label">
+                        <span class="label-text-alt text-base-content/60">Maximum 200 characters</span>
+                    </label>
+                </div>
+
+                <!-- Divider -->
+                <div class="divider">Options</div>
+
+                <!-- Options Container -->
+                <div id="optionsContainer" class="space-y-4 mb-6">
+                    <!-- Option 1 (Cannot be removed) -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-semibold">Option 1</span>
+                            <span class="label-text-alt text-error">*Required</span>
+                        </label>
+                        <div class="join w-full">
+                            <input type="text" name="option_1" placeholder="Enter first option..."
+                                class="input input-bordered join-item w-full" required maxlength="200" />
+                            <button type="button" class="btn join-item btn-disabled" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Option 2 (Cannot be removed) -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-semibold">Option 2</span>
+                            <span class="label-text-alt text-error">*Required</span>
+                        </label>
+                        <div class="join w-full">
+                            <input type="text" name="option_2" placeholder="Enter second option..."
+                                class="input input-bordered join-item w-full" required maxlength="200" />
+                            <button type="button" class="btn join-item btn-disabled" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Option Button -->
+                <div class="mb-6">
+                    <button type="button" id="addOptionBtn" class="btn btn-outline btn-secondary w-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Add Another Option
+                    </button>
+                    <p class="text-sm text-base-content/60 text-center mt-2">
+                        You can add up to 4 options total
+                    </p>
+                </div>
+
+                <!-- Divider -->
+                <div class="divider"></div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-4">
+                    <a href="{% url 'home' %}" class="btn btn-outline flex-1">
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary flex-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Create Poll
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Help Section -->
+    <div class="alert alert-info mt-6">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <div>
+            <h3 class="font-bold">Quick Tips</h3>
+            <div class="text-sm">
+                <ul class="list-disc list-inside">
+                    <li>You must have at least 2 options</li>
+                    <li>You can add up to 4 options maximum</li>
+                    <li>Each option can be up to 200 characters</li>
+                    <li>After creating, you'll get a unique poll code to share</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let optionCount = 2;
+    const maxOptions = 4;
+
+    const addOptionBtn = document.getElementById('addOptionBtn');
+    const optionsContainer = document.getElementById('optionsContainer');
+
+    // Add option functionality
+    addOptionBtn.addEventListener('click', function () {
+        if (optionCount < maxOptions) {
+            optionCount++;
+
+            // Create new option element
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'form-control option-dynamic';
+            optionDiv.innerHTML = `
+                <label class="label">
+                    <span class="label-text font-semibold">Option ${optionCount}</span>
+                    <span class="label-text-alt text-base-content/60">Optional</span>
+                </label>
+                <div class="join w-full">
+                    <input 
+                        type="text" 
+                        name="option_${optionCount}" 
+                        placeholder="Enter option ${optionCount}..." 
+                        class="input input-bordered join-item w-full"
+                        maxlength="200"
+                    />
+                    <button type="button" class="btn join-item btn-error remove-option-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            `;
+
+            optionsContainer.appendChild(optionDiv);
+
+            // Add remove functionality to the new button
+            const removeBtn = optionDiv.querySelector('.remove-option-btn');
+            removeBtn.addEventListener('click', function () {
+                optionDiv.remove();
+                optionCount--;
+                renumberOptions();
+                updateAddButtonVisibility();
+            });
+
+            updateAddButtonVisibility();
+        }
+    });
+
+    function updateAddButtonVisibility() {
+        if (optionCount >= maxOptions) {
+            addOptionBtn.classList.add('btn-disabled');
+            addOptionBtn.disabled = true;
+        } else {
+            addOptionBtn.classList.remove('btn-disabled');
+            addOptionBtn.disabled = false;
+        }
+    }
+
+    function renumberOptions() {
+        const dynamicOptions = document.querySelectorAll('.option-dynamic');
+        dynamicOptions.forEach((option, index) => {
+            const label = option.querySelector('.label-text');
+            const input = option.querySelector('input');
+            const newNumber = index + 3; // Start from 3 since 1 and 2 are fixed
+
+            label.textContent = `Option ${newNumber}`;
+            input.name = `option_${newNumber}`;
+            input.placeholder = `Enter option ${newNumber}...`;
+        });
+
+        // Update total count
+        optionCount = 2 + dynamicOptions.length;
+    }
+
+    // Form validation
+    document.getElementById('pollForm').addEventListener('submit', function (e) {
+        const question = document.querySelector('input[name="question"]').value.trim();
+        const option1 = document.querySelector('input[name="option_1"]').value.trim();
+        const option2 = document.querySelector('input[name="option_2"]').value.trim();
+
+        if (!question || !option1 || !option2) {
+            e.preventDefault();
+            alert('Please fill in the question and at least 2 options!');
+            return false;
+        }
+    });
+</script>
+{% endblock %}

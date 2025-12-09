@@ -19,45 +19,48 @@
             <div class="card bg-base-100 shadow-2xl">
                 <div class="card-body p-8 space-y-6">
                     <!-- New Poll Button -->
-                    <button class="btn btn-primary btn-lg w-full text-lg">
+                    <a href="{% url 'polls:create_poll' %}" class="btn btn-primary btn-lg w-full text-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
                         New Poll
-                    </button>
+                    </a>
 
                     <!-- Divider -->
                     <div class="divider"></div>
 
-                    <!-- Enter Poll Code Input -->
-                    <div class="form-control">
-                        <div class="join w-full">
-                            <input type="text" placeholder="Enter poll code..."
-                                class="input input-bordered input-lg join-item w-full" />
-                            <button class="btn btn-secondary btn-lg join-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                </svg>
-                                Join
-                            </button>
+                    <!-- Enter Poll Code Form -->
+                    <form method="GET" id="joinPollForm">
+                        <div class="form-control">
+                            <div class="join w-full">
+                                <input type="text" id="pollCodeInput" placeholder="Enter poll code..."
+                                    class="input input-bordered input-lg join-item w-full" pattern="[A-Z0-9]{8}"
+                                    maxlength="8" style="text-transform: uppercase;" />
+                                <button type="submit" class="btn btn-secondary btn-lg join-item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                    Join
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
 
                     <!-- Divider -->
                     <div class="divider"></div>
 
                     <!-- My Polls Button -->
-                    <button class="btn btn-outline btn-lg w-full text-lg">
+                    <a href="#" class="btn btn-outline btn-lg w-full text-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                         My Polls
-                    </button>
+                    </a>
                 </div>
             </div>
 
@@ -106,4 +109,27 @@
         animation: gradient 5s ease infinite;
     }
 </style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Handle poll code form submission
+    document.getElementById('joinPollForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const pollCode = document.getElementById('pollCodeInput').value.trim().toUpperCase();
+
+        if (pollCode.length !== 8) {
+            alert('Please enter a valid 8-character poll code.');
+            return;
+        }
+
+        // Redirect to poll view page
+        window.location.href = `/polls/${pollCode}/`;
+    });
+
+    // Auto-uppercase poll code input
+    document.getElementById('pollCodeInput').addEventListener('input', function (e) {
+        e.target.value = e.target.value.toUpperCase();
+    });
+</script>
 {% endblock %}
